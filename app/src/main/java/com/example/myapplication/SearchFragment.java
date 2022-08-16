@@ -63,7 +63,7 @@ public class SearchFragment extends Fragment {
     private View view;
     private FragmentActivity activity;
     private Context context;
-    final int imageSize = 224;
+    final static int imageSize = 224;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -177,7 +177,7 @@ public class SearchFragment extends Fragment {
 
                                 if (capturedImage.exists()) {
                                     Bitmap imgBitmap = BitmapFactory.decodeFile(capturedImage.getAbsolutePath());
-                                    Pair<Fish_Item, String> predictedResult = classifyImage(imgBitmap);
+                                    Pair<Fish_Item, String> predictedResult = classifyImage(imgBitmap, context);
                                     showResult(imgBitmap, predictedResult);
                                     galleryAddPic();
                                 }
@@ -214,7 +214,7 @@ public class SearchFragment extends Fragment {
                                 if (contentUri != null) {
                                     try {
                                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(view.getContext().getContentResolver(), contentUri);
-                                        Pair<Fish_Item, String> predictedResult = classifyImage(imageBitmap);
+                                        Pair<Fish_Item, String> predictedResult = classifyImage(imageBitmap, context);
                                         showResult(imageBitmap, predictedResult);
                                     } catch (IOException e) {
                                         e.printStackTrace();
@@ -332,10 +332,10 @@ public class SearchFragment extends Fragment {
     }
 
     @SuppressLint("DefaultLocale")
-    Pair<Fish_Item, String> classifyImage(Bitmap image) {
+    public static Pair<Fish_Item, String> classifyImage(Bitmap image, Context context) {
         try {
             image = Bitmap.createScaledBitmap(image, imageSize, imageSize, false);
-            Model model = Model.newInstance(activity.getApplicationContext());
+            Model model = Model.newInstance(context);
 
             // Creates inputs for reference.
             TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
@@ -378,8 +378,8 @@ public class SearchFragment extends Fragment {
             String predictedClass = classes[maxPos];
 
             Fish_Item returnFish = new Fish_Item(R.drawable.ic_block,
-                    getString(R.string.unknown),
-                    getString(R.string.unknown),
+                    context.getString(R.string.unknown),
+                    context.getString(R.string.unknown),
                     "unknown");
             String confidence = "0.0%";
 

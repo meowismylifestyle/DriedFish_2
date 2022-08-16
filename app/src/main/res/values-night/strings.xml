@@ -48,4 +48,6 @@
     <string name="search_bar">Search....</string>
     <string name="register">REGISTER</string>
     <string name="vietnamese">Tiếng Việt</string>
+    <string name="crop">CROP</string>
+    <string name="undo">UNDO</string>
 </resources>

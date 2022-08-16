@@ -53,4 +53,6 @@
     <string name="logout">Đăng xuất</string>
     <string name="search_bar">Tìm kiếm....</string>
     <string name="register">ĐĂNG KÍ</string>
+    <string name="crop">CẮT XÉN</string>
+    <string name="undo">QUAY LẠI</string>
 </resources>
