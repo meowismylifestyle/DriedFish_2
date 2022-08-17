@@ -25,10 +25,12 @@ import android.widget.SearchView;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -53,6 +55,7 @@ import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import com.example.myapplication.ml.Model;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 public class SearchFragment extends Fragment {
     private RecyclerView rcvFish;
@@ -63,7 +66,7 @@ public class SearchFragment extends Fragment {
     private View view;
     private FragmentActivity activity;
     private Context context;
-    final int imageSize = 224;
+    final static int imageSize = 224;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -170,15 +173,11 @@ public class SearchFragment extends Fragment {
                         @Override
                         public void onActivityResult(ActivityResult result) {
                             if (result.getResultCode() == Activity.RESULT_OK) {
-                                // There are no request codes
-                                Intent data = result.getData();
-
                                 File capturedImage = new File(currentPhotoPath);
 
                                 if (capturedImage.exists()) {
-                                    Bitmap imgBitmap = BitmapFactory.decodeFile(capturedImage.getAbsolutePath());
-                                    Pair<Fish_Item, String> predictedResult = classifyImage(imgBitmap);
-                                    showResult(imgBitmap, predictedResult);
+                                    Uri contentUri = Uri.fromFile(capturedImage);
+                                    cropImage(contentUri);
                                     galleryAddPic();
                                 }
                             }
@@ -211,21 +210,52 @@ public class SearchFragment extends Fragment {
                                 // There are no request codes
                                 Intent data = result.getData();
                                 Uri contentUri = Objects.requireNonNull(data).getData();
-                                if (contentUri != null) {
-                                    try {
-                                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(view.getContext().getContentResolver(), contentUri);
-                                        Pair<Fish_Item, String> predictedResult = classifyImage(imageBitmap);
-                                        showResult(imageBitmap, predictedResult);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
+                                if (contentUri != null)
+                                    cropImage(contentUri);
                             }
                         }
                     });
         });
         return view;
     }
+
+    private void cropImage(Uri imageUri) {
+        Intent cropImageIntent = CropImage.activity(imageUri).getIntent(requireContext());
+        cropImageResultLauncher.launch(cropImageIntent);
+    }
+
+    final ActivityResultLauncher<Intent> cropImageResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        if (data != null) {
+                            CropImage.ActivityResult cropResult = CropImage.getActivityResult(data);
+                            Uri imageUri = cropResult.getUri();
+                            if (imageUri != null) {
+                                try {
+                                    Bitmap image = MediaStore.Images.Media.getBitmap(
+                                            view.getContext().getContentResolver(),
+                                            imageUri
+                                    );
+                                    Pair<Fish_Item, String> prediction = classifyImage(image, getContext());
+                                    if (prediction != null)
+                                        showResult(image, prediction);
+                                    else
+                                        Log.d("SearchFragment", "cropImageResultLauncher: prediction is null");
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } else
+                                Log.d("SearchFragment", "cropImageResultLauncher: imageUri is null");
+                        } else
+                            Log.d("SearchFragment", "cropImageResultLauncher: data is null");
+                    }
+                }
+            });
 
     private void showResult(Bitmap imageBitmap, Pair<Fish_Item, String> predictedResult) {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
@@ -332,10 +362,10 @@ public class SearchFragment extends Fragment {
     }
 
     @SuppressLint("DefaultLocale")
-    Pair<Fish_Item, String> classifyImage(Bitmap image) {
+    public static Pair<Fish_Item, String> classifyImage(Bitmap image, Context context) {
         try {
             image = Bitmap.createScaledBitmap(image, imageSize, imageSize, false);
-            Model model = Model.newInstance(activity.getApplicationContext());
+            Model model = Model.newInstance(context);
 
             // Creates inputs for reference.
             TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
@@ -378,8 +408,8 @@ public class SearchFragment extends Fragment {
             String predictedClass = classes[maxPos];
 
             Fish_Item returnFish = new Fish_Item(R.drawable.ic_block,
-                    getString(R.string.unknown),
-                    getString(R.string.unknown),
+                    context.getString(R.string.unknown),
+                    context.getString(R.string.unknown),
                     "unknown");
             String confidence = "0.0%";
 

@@ -113,19 +113,22 @@ public class MainActivity extends AppCompatActivity {
         Class fragmentClass;
         switch(menuItem.getItemId()) {
             case R.id.nav_user_fragment:_fragment:
-                fragmentClass = UserFragment.class;
+            fragmentClass = UserFragment.class;
                 break;
             case R.id.nav_logout_fragment:
                 fragmentClass = LogOutFragment.class;
                 break;
             case R.id.nav_favorite_fragment:_fragment:
-                fragmentClass = FavouriteFragment.class;
+            fragmentClass = FavouriteFragment.class;
                 break;
             case R.id.nav_search_fragment:
                 fragmentClass = SearchFragment.class;
                 break;
             case R.id.nav_choose_language:
                 fragmentClass = ChooseLanguageFragment.class;
+                break;
+            case R.id.nav_history_fragment:
+                fragmentClass = HistoryFragment.class;
                 break;
             default:
                 fragmentClass = SearchFragment.class;
@@ -145,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
         if (fragmentClass != ChooseLanguageFragment.class
-        && fragmentClass != LogOutFragment.class) {
+                && fragmentClass != LogOutFragment.class) {
             // Highlight the selected item has been done by NavigationView
             menuItem.setChecked(true);
             // Set action bar title

@@ -12,18 +12,20 @@ import java.util.Set;
 public class User {
     public String fullName, day,month, year, email;
     private ArrayList<String> favouriteFishes;
+    private ArrayList<String> viewedFishes;
 
     public User() {
+        this.viewedFishes = new ArrayList<>();
         this.favouriteFishes = new ArrayList<>();
     }
 
     public User(String fullname, String day,String month,String year, String email){
+        this();
         this.fullName = fullname;
         this.day = day;
         this.month = month;
         this.year = year;
         this.email = email;
-        this.favouriteFishes = new ArrayList<>();
     }
 
     public String getFullName() {
@@ -103,6 +105,50 @@ public class User {
         this.favouriteFishes = favouriteFishes;
     }
 
+    public void addFavouriteFish(String fish) {
+        if (!this.favouriteFishes.contains(fish)) {
+            this.favouriteFishes.add(fish);
+        }
+    }
+
+    public void removeFavouriteFish(String fish) {
+        if (favouriteFishes != null)
+            favouriteFishes.remove(fish);
+    }
+
+    public ArrayList<String> getViewedFishes() {
+        return viewedFishes;
+    }
+
+    public void setViewedFishes(ArrayList<String> viewedFishes) {
+        this.viewedFishes = viewedFishes;
+    }
+
+    @Exclude
+    public ArrayList<Fish_Item> getViewedFishItems() {
+        ArrayList<Fish_Item> allFish = SearchFragment.getListFish();
+        ArrayList<Fish_Item> viewedFish = new ArrayList<>();
+        for (Fish_Item fish : allFish) {
+            if (viewedFishes.contains(fish.getClassLabel()))
+                viewedFish.add(fish);
+        }
+        return viewedFish;
+    }
+
+    public void addViewedFish(String fishLabel) {
+        if (!viewedFishes.contains(fishLabel))
+            viewedFishes.add(fishLabel);
+    }
+
+    public void removeViewedFish(String fishLabel) {
+        if (viewedFishes != null)
+            viewedFishes.remove(fishLabel);
+    }
+
+    public void clearAllViewedFishes() {
+        this.viewedFishes.clear();
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -113,16 +159,5 @@ public class User {
                 ", email='" + email + '\'' +
                 ", favouriteFishes=" + favouriteFishes +
                 '}';
-    }
-
-    public void addFavouriteFish(String fish) {
-        if (!this.favouriteFishes.contains(fish)) {
-            this.favouriteFishes.add(fish);
-        }
-    }
-
-    public void removeFavouriteFish(String fish) {
-        if (favouriteFishes != null)
-            favouriteFishes.remove(fish);
     }
 }

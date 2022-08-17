@@ -14,7 +14,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/back_pressed"
+                android:layout_gravity="left"
+                android:src="@drawable/baseline_arrow_back_ios_black_24dp"
+                android:backgroundTint="@android:color/transparent"/>
             <ImageView
                 android:id="@+id/ivFish"
                 android:layout_marginTop="10dp"
@@ -43,11 +49,12 @@
                 android:layout_height="1px"
                 android:layout_marginTop="8dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textSize="14sp" />
+           <androidx.recyclerview.widget.RecyclerView
+               android:id="@+id/list_recipe"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="20dp"
+               />
 
 <!--            <TextView-->
 <!--                android:id="@+id/tvPublisher"-->

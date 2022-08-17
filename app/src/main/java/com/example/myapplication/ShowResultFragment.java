@@ -2,12 +2,15 @@ package com.example.myapplication;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Layout;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +20,8 @@ import androidx.fragment.app.Fragment;
 
 import org.w3c.dom.Text;
 
+import java.util.Stack;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ShowResultFragment extends Fragment {
@@ -24,11 +29,20 @@ public class ShowResultFragment extends Fragment {
     Fish_Item predictedFish;
     String confidence;
 
+    View view;
+
     ImageView selectedImageView;
     CircleImageView predictedFishImageView;
     TextView predictedFishName;
     TextView predictedFishPrice;
     TextView confidenceTextView;
+
+    Stack<Bitmap> imageStack = new Stack<>();
+    Stack<Pair<Fish_Item, String>> resultStack = new Stack<>();
+
+    public ShowResultFragment() {
+        super(R.layout.activity_show_result);
+    }
 
     public ShowResultFragment(Bitmap selectedImage, Fish_Item predictedResult, String confidence) {
         super(R.layout.activity_show_result);
@@ -45,14 +59,14 @@ public class ShowResultFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        view = super.onCreateView(inflater, container, savedInstanceState);
 
         if (view != null) {
             selectedImageView = view.findViewById(R.id.selected_image_view);
             predictedFishImageView = view.findViewById(R.id.predicted_image);
             predictedFishName = view.findViewById(R.id.name_fish);
             predictedFishPrice = view.findViewById(R.id.price_fish);
-//        confidenceTextView = view.findViewById(R.id.confidence_TextView);
+            confidenceTextView = view.findViewById(R.id.confidence_TextView);
 
             selectedImageView.setImageBitmap(this.selectedImage);
 
@@ -65,7 +79,7 @@ public class ShowResultFragment extends Fragment {
                 );
                 predictedFishName.setText(predictedFish.getName());
                 predictedFishPrice.setText(predictedFish.getPrice());
-                // confidenceTextView.setText(confidence);
+                confidenceTextView.setText(confidence);
             }
         } else
             Log.d("ShowResultFragment", "onCreateView: view is null");
