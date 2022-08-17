@@ -28,16 +28,25 @@ public class DetailActivity extends AppCompatActivity {
     private RecipeAdapter mRecipeAdapter;
     private List<Recipe> mListRecipe;
 
+    Fish_Item fish_item;
+    Bundle bundle;
+
+    public final static DatabaseReference recipeReference = FirebaseDatabase.getInstance()
+            .getReference("Recipe")
+            .child("Recipe");
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_recipe);
 
-        Bundle bundle = getIntent().getExtras();
+        bundle = getIntent().getExtras();
         if(bundle == null){
             return;
         }
-        Fish_Item fish_item = (Fish_Item) bundle.get("object_fish");
+        fish_item = (Fish_Item) bundle.get("object_fish");
+
+        getListRecipeFromRealtimeDatabase(fish_item.getClassLabel());
 
         ImageView imgFish = findViewById(R.id.ivFish);
         TextView tvName = findViewById(R.id.tvName);
@@ -72,29 +81,21 @@ public class DetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-        getListRecipeFromRealtimeDatabase();
     }
 
-    private void getListRecipeFromRealtimeDatabase(){
-        Bundle bundle = getIntent().getExtras();
-        if(bundle == null){
-            return;
-        }
-        Fish_Item fish_item = (Fish_Item) bundle.get("object_fish");
-        String nameFish = fish_item.getClassLabel();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Recipe").child("Recipe").child(nameFish);
+    private void getListRecipeFromRealtimeDatabase(String fishLabel){
+        DatabaseReference fishRecipesRef = recipeReference.child(fishLabel);
 
-        myRef.addValueEventListener(new ValueEventListener() {
+        fishRecipesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot post : snapshot.getChildren()){
+                for (DataSnapshot post : snapshot.getChildren()){
                     Recipe recipe = post.getValue(Recipe.class);
                     mListRecipe.add(recipe);
                 }
 
-                mRecipeAdapter.notifyDataSetChanged();
+                mRecipeAdapter = new RecipeAdapter(mListRecipe);
+                rcvRecipe.setAdapter(mRecipeAdapter);
             }
 
             @Override
