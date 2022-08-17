@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.theartofdev.edmodo.cropper.CropImageView
+    <ImageView
         android:layout_width="200dp"
         android:layout_height="300dp"
         android:id="@+id/selected_image_view"
@@ -29,26 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="ContentDescription" />
-
-    <Button
-        android:id="@+id/crop_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
-        android:text="@string/crop"
-        app:layout_constraintTop_toBottomOf="@id/selected_image_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/undo_button"/>
-
-    <Button
-        android:id="@+id/undo_button"
-        android:text="@string/undo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
-        app:layout_constraintStart_toEndOf="@id/crop_button"
-        app:layout_constraintTop_toBottomOf="@id/selected_image_view"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/predicted_fish_title"
@@ -61,7 +41,7 @@
         android:textSize="30sp"
         android:background="@color/blue_100"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/crop_button"
+        app:layout_constraintTop_toBottomOf="@id/selected_image_view"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -109,7 +89,8 @@
         android:textSize="50sp"
         android:textColor="@color/white"
         android:background="@color/orange"
-        android:paddingHorizontal="15dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/predicted_image"
         app:layout_constraintBottom_toBottomOf="@id/predicted_image"/>

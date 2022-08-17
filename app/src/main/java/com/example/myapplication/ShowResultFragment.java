@@ -31,12 +31,11 @@ public class ShowResultFragment extends Fragment {
 
     View view;
 
-    com.theartofdev.edmodo.cropper.CropImageView selectedImageView;
+    ImageView selectedImageView;
     CircleImageView predictedFishImageView;
     TextView predictedFishName;
     TextView predictedFishPrice;
     TextView confidenceTextView;
-    Button cropButton, undoButton;
 
     Stack<Bitmap> imageStack = new Stack<>();
     Stack<Pair<Fish_Item, String>> resultStack = new Stack<>();
@@ -68,8 +67,6 @@ public class ShowResultFragment extends Fragment {
             predictedFishName = view.findViewById(R.id.name_fish);
             predictedFishPrice = view.findViewById(R.id.price_fish);
             confidenceTextView = view.findViewById(R.id.confidence_TextView);
-            cropButton = view.findViewById(R.id.crop_button);
-            undoButton = view.findViewById(R.id.undo_button);
 
             selectedImageView.setImageBitmap(this.selectedImage);
 
@@ -84,64 +81,9 @@ public class ShowResultFragment extends Fragment {
                 predictedFishPrice.setText(predictedFish.getPrice());
                 confidenceTextView.setText(confidence);
             }
-
-            cropButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cropImage();
-                }
-            });
-
-            undoButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    undoImage();
-                }
-            });
         } else
             Log.d("ShowResultFragment", "onCreateView: view is null");
 
         return view;
-    }
-
-    private void undoImage() {
-        if (!imageStack.empty()) {
-            selectedImage = imageStack.pop();
-            Pair<Fish_Item, String> popResult = resultStack.pop();
-            predictedFish = popResult.first;
-            confidence = popResult.second;
-            selectedImageView.setImageBitmap(selectedImage);
-            updateResult(predictedFish, confidence);
-        }
-    }
-
-    private void cropImage() {
-        imageStack.push(selectedImage);
-        selectedImage = selectedImageView.getCroppedImage();
-
-        Pair<Fish_Item, String> newResult = SearchFragment.classifyImage(selectedImage, getContext());
-        if (newResult != null) {
-            resultStack.push(new Pair<>(predictedFish, confidence));
-            predictedFish = newResult.first;
-            confidence = newResult.second;
-            selectedImageView.setImageBitmap(selectedImage);
-            updateResult(predictedFish, confidence);
-        } else {
-            selectedImage = imageStack.pop();
-        }
-    }
-
-    private void updateResult(Fish_Item fish, String confidence) {
-            if (fish != null) {
-                predictedFishImageView.setImageBitmap (
-                        BitmapFactory.decodeResource (
-                                view.getContext().getResources(),
-                                fish.getImage()
-                        )
-                );
-                predictedFishName.setText(fish.getName());
-                predictedFishPrice.setText(fish.getPrice());
-                confidenceTextView.setText(confidence);
-            }
     }
 }

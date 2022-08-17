@@ -61,9 +61,5 @@ dependencies {
 
     // This library is used for crop image feature
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
-    implementation 'com.github.CanHub:Android-Image-Cropper:4.3.0'
 
-    // This library is used for loading the
-    // cropped image into ImageView.
-    implementation 'com.squareup.picasso:picasso:2.5.2'
 }
