@@ -127,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_choose_language:
                 fragmentClass = ChooseLanguageFragment.class;
                 break;
+            case R.id.nav_history_fragment:
+                fragmentClass = HistoryFragment.class;
+                break;
             default:
                 fragmentClass = SearchFragment.class;
         }

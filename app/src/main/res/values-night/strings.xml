@@ -50,4 +50,6 @@
     <string name="vietnamese">Tiếng Việt</string>
     <string name="crop">CROP</string>
     <string name="undo">UNDO</string>
+    <string name="clear_history">Clear History</string>
+    <string name="cleared_history_notification">Cleared viewed fishes history</string>
 </resources>

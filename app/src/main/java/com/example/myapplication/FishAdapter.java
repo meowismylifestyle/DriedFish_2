@@ -60,7 +60,6 @@ public class FishAdapter extends RecyclerView.Adapter<FishAdapter.FishViewHolder
             }
         });
 
-
         if (fish.isFavourite())
             holder.addToFavouriteButton.setImageResource(R.drawable.ic_baseline_favorite_24);
         else
@@ -72,6 +71,13 @@ public class FishAdapter extends RecyclerView.Adapter<FishAdapter.FishViewHolder
         Bundle bundle = new Bundle();
         bundle.putSerializable("object_fish",fish_item);
         intent.putExtras(bundle);
+
+        // Add fish label to viewed fish items of current User
+        LoginActivity.currentUser.addViewedFish(fish_item.getClassLabel());
+
+        // Update new data to database
+        LoginActivity.currentUserReference.setValue(LoginActivity.currentUser);
+
         mContext.startActivity(intent);
     }
 

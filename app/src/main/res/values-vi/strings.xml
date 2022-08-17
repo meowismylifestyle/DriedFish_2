@@ -55,4 +55,6 @@
     <string name="register">ĐĂNG KÍ</string>
     <string name="crop">CẮT XÉN</string>
     <string name="undo">QUAY LẠI</string>
+    <string name="clear_history">Xoá lịch sử</string>
+    <string name="cleared_history_notification">Đã xoá lịch sử xem</string>
 </resources>
