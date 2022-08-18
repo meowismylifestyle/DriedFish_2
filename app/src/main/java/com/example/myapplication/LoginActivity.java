@@ -115,69 +115,67 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         // Try sign-in with user-typed email and password
-        mAuth.signInWithEmailAndPassword(email,pass)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        firebaseUser = LoginActivity.mAuth.getCurrentUser();
+        mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                firebaseUser = LoginActivity.mAuth.getCurrentUser();
 
-                        // Check if account is verified via email
-                        if (firebaseUser != null && firebaseUser.isEmailVerified()) {
+                // Check if account is verified via email
+                if (firebaseUser != null && firebaseUser.isEmailVerified()) {
 
-                            // If account is verified, get the database reference
-                            // and retrieve user's information
-                            Toast.makeText(
-                                    getApplicationContext(),
-                                    getResources().getString(R.string.login_successfully),
-                                    Toast.LENGTH_SHORT
-                            ).show();
+                    // If account is verified, get the database reference
+                    // and retrieve user's information
+                    Toast.makeText(
+                            getApplicationContext(),
+                            getResources().getString(R.string.login_successfully),
+                            Toast.LENGTH_SHORT
+                    ).show();
 
-                            // Get database reference
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            currentUserReference = database
-                                    .getReference("Users")
-                                    .child(firebaseUser.getUid());
+                    // Get database reference
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    currentUserReference = database
+                            .getReference("Users")
+                            .child(firebaseUser.getUid());
 
-                            // Retrieve user's information
-                            currentUserReference
-                                    .addListenerForSingleValueEvent(
-                                            new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    LoginActivity.currentUser = snapshot.getValue(User.class);
-                                }
+                    // Retrieve user's information
+                    currentUserReference
+                            .addListenerForSingleValueEvent( new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            LoginActivity.currentUser = snapshot.getValue(User.class);
+                                        }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Log.d("LoginActivity", "get data failed");
-                                }
-                            });
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            Log.d("LoginActivity", "get data failed");
+                                        }
+                                    });
 
-                            // Move to MainActivity
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            ActivityCompat.finishAffinity(LoginActivity.this);
+                    // Move to MainActivity
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    ActivityCompat.finishAffinity(LoginActivity.this);
 
-                        } else {
+                } else {
 
-                            // If account is not verified, show the Toast message to user
-                            Toast.makeText(
-                                    getApplicationContext(),
-                                    getResources().getString(R.string.you_havent_verify_your_account),
-                                    Toast.LENGTH_LONG
-                            ).show();
-                        }
+                    // If account is not verified, show the Toast message to user
+                    Toast.makeText(
+                            getApplicationContext(),
+                            getResources().getString(R.string.you_havent_verify_your_account),
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
 
-                    } else {
+            } else {
 
-                        // If sign-in unsuccessfully, show the Toast notification
-                        Toast.makeText(
-                                getApplicationContext(),
-                                getResources().getString(R.string.cant_login),
-                                Toast.LENGTH_LONG
-                        ).show();
-                    }
-                    progressBar.setVisibility(View.GONE);
-                });
+                // If sign-in unsuccessfully, show the Toast notification
+                Toast.makeText(
+                        getApplicationContext(),
+                        getResources().getString(R.string.cant_login),
+                        Toast.LENGTH_LONG
+                ).show();
+            }
+            progressBar.setVisibility(View.GONE);
+        });
     }
 }

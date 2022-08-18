@@ -7,24 +7,44 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.common.model.DownloadConditions;
+import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.Translation;
+import com.google.mlkit.nl.translate.Translator;
+import com.google.mlkit.nl.translate.TranslatorOptions;
 
 import java.util.Locale;
 
 public class LocaleHelper {
 
     private static final String SELECTED_LANGUAGE = "Locale.Helper.Selected.Language";
+    public static Translator Vietnamese2EnglishTranslator;
+
+    private static final TranslatorOptions en2vi = new TranslatorOptions.Builder()
+            .setSourceLanguage(TranslateLanguage.ENGLISH)
+            .setTargetLanguage(TranslateLanguage.VIETNAMESE)
+            .build();
+
+    private static final TranslatorOptions vi2en = new TranslatorOptions.Builder()
+            .setSourceLanguage(TranslateLanguage.VIETNAMESE)
+            .setTargetLanguage(TranslateLanguage.ENGLISH)
+            .build();
 
     public static void onCreate(Context context) {
-
         String lang;
         if(getLanguage(context).isEmpty()){
             lang = getPersistedData(context, Locale.getDefault().getLanguage());
         }else {
             lang = getLanguage(context);
         }
-
         setLocale(context, lang);
     }
 
@@ -99,5 +119,45 @@ public class LocaleHelper {
 
         AlertDialog mDialog = mBuilder.create();
         mDialog.show();
+    }
+
+    public interface OnTranslateSuccess {
+        void returnTranslatedString(String translatedString);
+    }
+
+    public static void translate(Context context, String sourceLang, String targetLang, String text, OnTranslateSuccess returner) {
+        // Download ML model if needed
+        Vietnamese2EnglishTranslator = Translation.getClient(vi2en);
+
+        DownloadConditions conditions = new DownloadConditions.Builder()
+                .requireWifi()
+                .build();
+
+        Vietnamese2EnglishTranslator.downloadModelIfNeeded(conditions).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Vietnamese2EnglishTranslator.translate(text).addOnSuccessListener(new OnSuccessListener<String>() {
+                    @Override
+                    public void onSuccess(String translatedString) {
+                        returner.returnTranslatedString(translatedString);
+                        //Vietnamese2EnglishTranslator.close();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TRANSLATION", "Download Model OK, but Translation failed");
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TRANSLATION", "Download ML Model failed");
+                Toast.makeText(context,
+                        context.getResources().getString(R.string.failed_download_translation_model),
+                        Toast.LENGTH_LONG
+                ).show();
+            }
+        });
     }
 }

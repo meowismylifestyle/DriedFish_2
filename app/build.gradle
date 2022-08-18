@@ -62,4 +62,6 @@ dependencies {
     // This library is used for crop image feature
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
+    // This is to translate text
+    implementation 'com.google.mlkit:translate:17.0.1'
 }

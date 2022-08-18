@@ -92,9 +92,8 @@ public class User {
 
     @Exclude
     public ArrayList<Fish_Item> getFavouriteFishItem() {
-        ArrayList<Fish_Item> allFish = SearchFragment.getListFish();
         ArrayList<Fish_Item> favFish = new ArrayList<>();
-        for (Fish_Item fish : allFish) {
+        for (Fish_Item fish : Fish_Item.allFishes) {
             if (favouriteFishes.contains(fish.getClassLabel()))
                 favFish.add(fish);
         }
@@ -126,9 +125,8 @@ public class User {
 
     @Exclude
     public ArrayList<Fish_Item> getViewedFishItems() {
-        ArrayList<Fish_Item> allFish = SearchFragment.getListFish();
         ArrayList<Fish_Item> viewedFish = new ArrayList<>();
-        for (Fish_Item fish : allFish) {
+        for (Fish_Item fish : Fish_Item.allFishes) {
             if (viewedFishes.contains(fish.getClassLabel()))
                 viewedFish.add(fish);
         }

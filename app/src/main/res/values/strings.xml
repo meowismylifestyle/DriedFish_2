@@ -58,4 +58,8 @@
     <string name="undo">UNDO</string>
     <string name="clear_history">Clear History</string>
     <string name="cleared_history_notification">Cleared viewed fishes history</string>
+    <string name="back_to_previous_screen">Back to previous screen</string>
+    <string name="ingredients">Ingredients:</string>
+    <string name="instruction">Instruction:</string>
+    <string name="failed_download_translation_model">Failed to download translation tools, please check your WIFI connection</string>
 </resources>

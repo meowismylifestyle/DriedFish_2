@@ -57,4 +57,8 @@
     <string name="undo">QUAY LẠI</string>
     <string name="clear_history">Xoá lịch sử</string>
     <string name="cleared_history_notification">Đã xoá lịch sử xem</string>
+    <string name="back_to_previous_screen">Quay lại màn hình trước</string>
+    <string name="ingredients">Nguyên liệu:</string>
+    <string name="instruction">Hướng dẫn:</string>
+    <string name="failed_download_translation_model">Failed to download translation tools, please check your WIFI connection</string>
 </resources>

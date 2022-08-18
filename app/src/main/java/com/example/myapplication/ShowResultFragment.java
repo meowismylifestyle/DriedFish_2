@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import org.w3c.dom.Text;
@@ -36,6 +38,7 @@ public class ShowResultFragment extends Fragment {
     TextView predictedFishName;
     TextView predictedFishPrice;
     TextView confidenceTextView;
+    CardView predictedFishCardView;
 
     Stack<Bitmap> imageStack = new Stack<>();
     Stack<Pair<Fish_Item, String>> resultStack = new Stack<>();
@@ -67,6 +70,7 @@ public class ShowResultFragment extends Fragment {
             predictedFishName = view.findViewById(R.id.name_fish);
             predictedFishPrice = view.findViewById(R.id.price_fish);
             confidenceTextView = view.findViewById(R.id.confidence_TextView);
+            predictedFishCardView = view.findViewById(R.id.show_result_card_view);
 
             selectedImageView.setImageBitmap(this.selectedImage);
 
@@ -80,6 +84,13 @@ public class ShowResultFragment extends Fragment {
                 predictedFishName.setText(predictedFish.getName());
                 predictedFishPrice.setText(predictedFish.getPrice());
                 confidenceTextView.setText(confidence);
+
+                predictedFishCardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        FishAdapter.onClickGoToDetail(getContext(), predictedFish);
+                    }
+                });
             }
         } else
             Log.d("ShowResultFragment", "onCreateView: view is null");

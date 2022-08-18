@@ -1,6 +1,10 @@
 package com.example.myapplication;
 
-public class Recipe {
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Recipe implements Serializable {
     private String nameRecipe;
     private String ingredients;
     private String instructions;
@@ -40,8 +44,4 @@ public class Recipe {
 
     public Recipe(){
     }
-
-
-
-
 }

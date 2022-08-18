@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
+import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -31,9 +33,21 @@ public class DetailActivity extends AppCompatActivity {
     Fish_Item fish_item;
     Bundle bundle;
 
-    public final static DatabaseReference recipeReference = FirebaseDatabase.getInstance()
-            .getReference("Recipe")
-            .child("Recipe");
+    // Reference to database of all recipes
+    // of the fish of this detail activity
+    public static DatabaseReference recipeReference;
+
+    public final ValueEventListener onRecipeChanged = new ValueEventListener() {
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            for (DataSnapshot data : snapshot.getChildren())
+                mListRecipe.add(data.getValue(Recipe.class));
+            mRecipeAdapter.notifyDataSetChanged();
+        }
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {}
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -45,8 +59,6 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
         fish_item = (Fish_Item) bundle.get("object_fish");
-
-        getListRecipeFromRealtimeDatabase(fish_item.getClassLabel());
 
         ImageView imgFish = findViewById(R.id.ivFish);
         TextView tvName = findViewById(R.id.tvName);
@@ -71,9 +83,19 @@ public class DetailActivity extends AppCompatActivity {
         rcvRecipe.addItemDecoration(dividerItemDecoration);
 
         mListRecipe = new ArrayList<>();
-        mRecipeAdapter = new RecipeAdapter(mListRecipe);
-
+        mRecipeAdapter = new RecipeAdapter(DetailActivity.this, mListRecipe);
         rcvRecipe.setAdapter(mRecipeAdapter);
+
+        if (LocaleHelper.getLanguage(DetailActivity.this).equals("vi")) {
+            recipeReference = FirebaseDatabase.getInstance()
+                    .getReference("Recipes-vietnamese")
+                    .child(fish_item.getClassLabel());
+        } else {
+            recipeReference = FirebaseDatabase.getInstance()
+                    .getReference("Recipes-english")
+                    .child(fish_item.getClassLabel());
+        }
+        recipeReference.addValueEventListener(onRecipeChanged);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,28 +103,5 @@ public class DetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-    }
-
-    private void getListRecipeFromRealtimeDatabase(String fishLabel){
-        DatabaseReference fishRecipesRef = recipeReference.child(fishLabel);
-
-        fishRecipesRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot post : snapshot.getChildren()){
-                    Recipe recipe = post.getValue(Recipe.class);
-                    mListRecipe.add(recipe);
-                }
-
-                mRecipeAdapter = new RecipeAdapter(mListRecipe);
-                rcvRecipe.setAdapter(mRecipeAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
     }
 }

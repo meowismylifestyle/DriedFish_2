@@ -36,6 +36,7 @@ public class FishAdapter extends RecyclerView.Adapter<FishAdapter.FishViewHolder
         this.mListFish = mListFish;
         this.mListFishOld = mListFish;
     }
+
     @NonNull
     @Override
     public FishViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -56,7 +57,7 @@ public class FishAdapter extends RecyclerView.Adapter<FishAdapter.FishViewHolder
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickGoToDetail(fish);
+                onClickGoToDetail(mContext, fish);
             }
         });
 
@@ -66,19 +67,26 @@ public class FishAdapter extends RecyclerView.Adapter<FishAdapter.FishViewHolder
             holder.addToFavouriteButton.setImageResource(R.drawable.ic_baseline_shadow_favorite_24);
     }
 
-    private void onClickGoToDetail(Fish_Item fish_item) {
-        Intent intent = new Intent(mContext,DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("object_fish",fish_item);
-        intent.putExtras(bundle);
+    public static void onClickGoToDetail(Context mContext, Fish_Item fish_item) {
+        if (fish_item != null) {
+            Intent intent = new Intent(mContext,DetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("object_fish",fish_item);
+            intent.putExtras(bundle);
 
-        // Add fish label to viewed fish items of current User
-        LoginActivity.currentUser.addViewedFish(fish_item.getClassLabel());
+            // Add fish label to viewed fish items of current User
+            if (LoginActivity.currentUser != null)
+                LoginActivity.currentUser.addViewedFish(fish_item.getClassLabel());
+            else
+                Log.d("FishAdapter", "currentUser is null");
 
-        // Update new data to database
-        LoginActivity.currentUserReference.setValue(LoginActivity.currentUser);
-
-        mContext.startActivity(intent);
+            // Update new data to database
+            if (LoginActivity.currentUserReference != null)
+                LoginActivity.currentUserReference.setValue(LoginActivity.currentUser);
+            else
+                Log.d("FishAdapter", "currentUserReference is null");
+            mContext.startActivity(intent);
+        }
     }
 
     @Override
