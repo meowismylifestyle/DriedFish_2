@@ -7,22 +7,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -62,7 +56,7 @@ public class FishAdapter extends RecyclerView.Adapter<FishAdapter.FishViewHolder
         });
 
         if (fish.isFavourite())
-            holder.addToFavouriteButton.setImageResource(R.drawable.ic_baseline_favorite_24);
+            holder.addToFavouriteButton.setImageResource(R.drawable.ic_baseline_favorite_red_24);
         else
             holder.addToFavouriteButton.setImageResource(R.drawable.ic_baseline_shadow_favorite_24);
     }
@@ -151,7 +145,7 @@ public class FishAdapter extends RecyclerView.Adapter<FishAdapter.FishViewHolder
 
                         if (!selectedFish.isFavourite()) {
                             LoginActivity.currentUser.addFavouriteFish(selectedFish.getClassLabel());
-                            addToFavouriteButton.setImageResource(R.drawable.ic_baseline_favorite_24);
+                            addToFavouriteButton.setImageResource(R.drawable.ic_baseline_favorite_red_24);
                         } else {
                             LoginActivity.currentUser.removeFavouriteFish(selectedFish.getClassLabel());
                             addToFavouriteButton.setImageResource(R.drawable.ic_baseline_shadow_favorite_24);
