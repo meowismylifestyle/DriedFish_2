@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffff">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,8 +31,8 @@
                 android:layout_toEndOf="@id/profile_image"
                 android:fontFamily="@font/bungee"
                 android:includeFontPadding="false"
-                android:text="@string/app_name"
                 android:textColor="@color/black"
+                android:text="@string/app_name"
                 android:textSize="20sp" />
 
             <TextView
@@ -46,7 +45,7 @@
                 android:layout_toEndOf="@id/profile_image"
                 android:fontFamily="@font/antic"
                 android:text="@string/information"
-                android:textColor="@color/black"
+                android:textColor="#201F1F"
                 android:textSize="15sp" />
         </RelativeLayout>
 
@@ -60,17 +59,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="@string/full_name"
-                android:textColorHint="@color/black">
+                android:hint="@string/full_name">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/fullname_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
                     android:drawableStart="@drawable/name"
-                    android:drawablePadding="10dp"
-                    android:textColor="@color/black" />
+                    android:drawablePadding="10dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,35 +74,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="@string/email"
-
-                android:textColorHint="@color/black">
+                android:hint="@string/email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
                     android:drawableStart="@drawable/email"
-                    android:drawablePadding="10dp"
-                    android:textColor="@color/black" />
+                    android:drawablePadding="10dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="@string/birthday"
-
-                android:textColorHint="@color/black">
+                android:hint="@string/birthday">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/birthday_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:drawableStart="@drawable/baseline_cake_black_24dp"
+                    android:drawableStart="@drawable/ic_baseline_cake_24"
                     android:drawablePadding="10dp"
-                    android:textColor="@color/black"
                     android:clickable="false"
                     android:cursorVisible="false"
                     android:focusable="false"
@@ -120,8 +108,8 @@
                 android:layout_marginTop="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#fece2f"
-                android:backgroundTint="#FECE2F"
+                android:background="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary"
                 android:fontFamily="@font/bungee"
                 android:text="@string/update" />
         </LinearLayout>
